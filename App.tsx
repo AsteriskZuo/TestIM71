@@ -8,6 +8,7 @@
 import * as React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Pressable,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -16,6 +17,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import {ChatAreaCode, ChatClient} from 'react-native-chat-sdk';
 
 import {
   Colors,
@@ -28,6 +30,36 @@ import {
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
+
+function init() {
+  ChatClient.getInstance().init({
+    appKey: 'sdf',
+    autoLogin: false,
+    debugModel: false,
+    acceptInvitationAlways: false,
+    autoAcceptGroupInvitation: false,
+    requireAck: false,
+    requireDeliveryAck: false,
+    deleteMessagesAsExitGroup: false,
+    deleteMessagesAsExitChatRoom: false,
+    isChatRoomOwnerLeaveAllowed: false,
+    sortMessageByServerTime: false,
+    usingHttpsOnly: false,
+    serverTransfer: false,
+    isAutoDownload: false,
+    enableDNSConfig: false,
+    dnsUrl: '',
+    restServer: '',
+    imServer: '',
+    imPort: 0,
+    enableTLS: false,
+    messagesReceiveCallbackIncludeSend: false,
+    regardImportMessagesAsRead: false,
+    areaCode: ChatAreaCode.CN,
+    enableEmptyConversation: false,
+    useReplacedMessageContents: false,
+  });
+}
 
 function Section({children, title}: SectionProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -68,6 +100,9 @@ function App(): JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
+      <Pressable onPress={init}>
+        <Text>{'test local depend'}</Text>
+      </Pressable>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>

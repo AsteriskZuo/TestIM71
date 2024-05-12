@@ -6,6 +6,7 @@
  */
 
 module.exports = {
+  watchFolders: ['/Users/asterisk/Codes/rn/react-native-chat-sdk'],
   transformer: {
     getTransformOptions: async () => ({
       transform: {

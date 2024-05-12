@@ -1,0 +1,52 @@
+1. Create a new project with React Native 0.71.11 and TypeScript:
+
+```sh
+npx react-native@latest init --version 0.71.11 TestIM71
+yarn
+yarn add typescript
+```
+
+2. Add the following to the `tsconfig.json` file:
+
+```json
+{
+  "extends": "@tsconfig/react-native/tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsxdev"
+  }
+}
+```
+
+3. Execute the following commands:
+
+```sh
+yarn add react-native-chat-sdk@1.3.1
+```
+
+4. Create link for `react-native-chat-sdk` package in local repo:
+
+```sh
+yarn link
+```
+
+5. Link the package of `react-native-chat-sdk` to the project:
+
+```sh
+yarn link react-native-chat-sdk
+```
+
+6. Add the following to the `metro.config.js` file:
+
+```js
+module.exports = {
+  watchFolders: ['/Users/asterisk/Codes/rn/react-native-chat-sdk'],
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: true,
+      },
+    }),
+  },
+};
+```
