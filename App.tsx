@@ -14,16 +14,30 @@ import {
   Text,
   useColorScheme,
 } from 'react-native';
-import {ChatClient, ChatOptions} from 'react-native-agora-chat';
+import {
+  ChatClient,
+  ChatError,
+  ChatMessage,
+  ChatMessageStatusCallback,
+  ChatOptions,
+} from 'react-native-agora-chat';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 const appKey = 'easemob#easeim';
 const id = 'asterisk001';
 const ps = 'qwerty';
+const peer = 'asterisk003';
 
 function init() {
-  ChatClient.getInstance().init(new ChatOptions({appKey}));
+  ChatClient.getInstance()
+    .init(new ChatOptions({appKey}))
+    .then(() => {
+      console.log('init success');
+    })
+    .catch(e => {
+      console.log(e);
+    });
 }
 
 function login() {
@@ -48,11 +62,29 @@ function logout() {
 }
 function custom() {
   ChatClient.getInstance()
-    .chatManager.searchMsgFromDB('1')
+    .chatManager.searchMsgFromDB('1', -1, 20, 'sdf')
     .then(res => {
       console.log(res);
     })
     .catch();
+}
+function send() {
+  const msg = ChatMessage.createTextMessage(peer, '1');
+  ChatClient.getInstance()
+    .chatManager.sendMessage(msg, {
+      onError: (localMsgId: string, error: ChatError) => {
+        console.log('onError', error);
+      },
+      onSuccess: (message: ChatMessage) => {
+        console.log('onSuccess', message);
+      },
+    } as ChatMessageStatusCallback)
+    .then(() => {
+      console.log('send success');
+    })
+    .catch(e => {
+      console.log(e);
+    });
 }
 
 function App(): JSX.Element {
@@ -79,6 +111,9 @@ function App(): JSX.Element {
       </Pressable>
       <Pressable style={styles.test} onPress={custom}>
         <Text>{'custom'}</Text>
+      </Pressable>
+      <Pressable style={styles.test} onPress={send}>
+        <Text>{'send'}</Text>
       </Pressable>
     </SafeAreaView>
   );
