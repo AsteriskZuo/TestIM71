@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -5,86 +6,53 @@
  * @format
  */
 
-import * as React from 'react';
-import type {PropsWithChildren} from 'react';
 import {
   Pressable,
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   useColorScheme,
-  View,
 } from 'react-native';
-import {ChatAreaCode, ChatClient} from 'react-native-chat-sdk';
+import {ChatClient, ChatOptions} from 'react-native-agora-chat';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+const appKey = 'easemob#easeim';
+const id = 'asterisk001';
+const ps = 'qwerty';
 
 function init() {
-  ChatClient.getInstance().init({
-    appKey: 'sdf',
-    autoLogin: false,
-    debugModel: false,
-    acceptInvitationAlways: false,
-    autoAcceptGroupInvitation: false,
-    requireAck: false,
-    requireDeliveryAck: false,
-    deleteMessagesAsExitGroup: false,
-    deleteMessagesAsExitChatRoom: false,
-    isChatRoomOwnerLeaveAllowed: false,
-    sortMessageByServerTime: false,
-    usingHttpsOnly: false,
-    serverTransfer: false,
-    isAutoDownload: false,
-    enableDNSConfig: false,
-    dnsUrl: '',
-    restServer: '',
-    imServer: '',
-    imPort: 0,
-    enableTLS: false,
-    messagesReceiveCallbackIncludeSend: false,
-    regardImportMessagesAsRead: false,
-    areaCode: ChatAreaCode.CN,
-    enableEmptyConversation: false,
-    useReplacedMessageContents: false,
-  });
+  ChatClient.getInstance().init(new ChatOptions({appKey}));
 }
 
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
+function login() {
+  ChatClient.getInstance()
+    .login(id, ps, true)
+    .then(() => {
+      console.log('login success');
+    })
+    .catch(e => {
+      console.log(e);
+    });
+}
+function logout() {
+  ChatClient.getInstance()
+    .logout()
+    .then(() => {
+      console.log('logout success');
+    })
+    .catch(e => {
+      console.log(e);
+    });
+}
+function custom() {
+  ChatClient.getInstance()
+    .chatManager.searchMsgFromDB('1')
+    .then(res => {
+      console.log(res);
+    })
+    .catch();
 }
 
 function App(): JSX.Element {
@@ -100,53 +68,28 @@ function App(): JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <Pressable onPress={init}>
-        <Text>{'test local depend'}</Text>
+      <Pressable style={styles.test} onPress={init}>
+        <Text>{'init'}</Text>
       </Pressable>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+      <Pressable style={styles.test} onPress={login}>
+        <Text>{'login'}</Text>
+      </Pressable>
+      <Pressable style={styles.test} onPress={logout}>
+        <Text>{'logout'}</Text>
+      </Pressable>
+      <Pressable style={styles.test} onPress={custom}>
+        <Text>{'custom'}</Text>
+      </Pressable>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  test: {
+    height: 40,
+    width: '100%',
+    marginVertical: 5,
+    backgroundColor: 'green',
   },
 });
 
